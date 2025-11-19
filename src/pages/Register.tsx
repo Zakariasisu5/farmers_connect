@@ -40,6 +40,12 @@ const Register: React.FC = () => {
     setError("");
     setIsLoading(true);
     
+    if (!region) {
+      setError("Please select your region");
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       await register(name, email, password, region);
       navigate("/home");
@@ -109,15 +115,15 @@ const Register: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="region">Region</Label>
-                <Select value={region} onValueChange={setRegion}>
+                <Label htmlFor="region">Region <span className="text-destructive">*</span></Label>
+                <Select value={region} onValueChange={setRegion} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select your region" />
                   </SelectTrigger>
                   <SelectContent>
-                    {ghanaRegions.map((region) => (
-                      <SelectItem key={region} value={region}>
-                        {region}
+                    {ghanaRegions.map((regionOption) => (
+                      <SelectItem key={regionOption} value={regionOption}>
+                        {regionOption}
                       </SelectItem>
                     ))}
                   </SelectContent>

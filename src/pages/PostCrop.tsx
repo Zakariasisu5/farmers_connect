@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { ArrowLeft, Crop, CircleDollarSign, Info, MapPin, Phone, Mail, Upload, X } from "lucide-react";
@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMarket, ghanaRegions } from "@/contexts/MarketContext";
 import { Button } from "@/components/ui/button";
+import { getUnitsForCrop, getPrimaryUnitForCrop, getAllCropNames } from "@/lib/cropUnits";
 import {
   Form,
   FormControl,
@@ -45,8 +46,8 @@ const PostCrop: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Common units for agricultural products
-  const units = ["kg", "bag", "crate", "box", "ton", "piece", "dozen", "bundle"];
+  // Get all available crop names
+  const availableCrops = getAllCropNames();
 
   // Initialize the form
   const form = useForm<FormValues>({
@@ -62,6 +63,18 @@ const PostCrop: React.FC = () => {
       contact_email: "",
     },
   });
+
+  // Watch crop name to update available units
+  const selectedCrop = form.watch("crop_name");
+  const availableUnits = selectedCrop ? getUnitsForCrop(selectedCrop) : ["kg", "bag", "crate", "box", "ton", "piece", "dozen", "bundle"];
+
+  // Update unit when crop changes
+  useEffect(() => {
+    if (selectedCrop) {
+      const primaryUnit = getPrimaryUnitForCrop(selectedCrop);
+      form.setValue("unit", primaryUnit);
+    }
+  }, [selectedCrop, form]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -184,8 +197,20 @@ const PostCrop: React.FC = () => {
                   <FormItem>
                     <FormLabel>{t("cropName")}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t("enterCropName")} {...field} />
+                      <Input 
+                        placeholder={t("enterCropName") || "Type crop name (autocomplete available)"} 
+                        {...field}
+                        list="crop-suggestions"
+                      />
+                      <datalist id="crop-suggestions">
+                        {availableCrops.map(crop => (
+                          <option key={crop} value={crop} />
+                        ))}
+                      </datalist>
                     </FormControl>
+                    <FormDescription className="text-xs">
+                      {selectedCrop && `Recommended unit: ${getPrimaryUnitForCrop(selectedCrop)}`}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -219,7 +244,7 @@ const PostCrop: React.FC = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {units.map(unit => (
+                          {availableUnits.map(unit => (
                             <SelectItem key={unit} value={unit}>{unit}</SelectItem>
                           ))}
                         </SelectContent>

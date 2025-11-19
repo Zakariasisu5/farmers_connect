@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MarketItem } from "@/contexts/MarketContext";
+import { getPrimaryUnitForCrop } from "@/lib/cropUnits";
 
 // Ghana crop to commodity mapping for API
 const CROP_TO_COMMODITY: Record<string, string> = {
@@ -18,17 +19,18 @@ const CROP_TO_COMMODITY: Record<string, string> = {
 };
 
 // Base prices in GH₵ per unit (realistic Ghana market prices as of 2024)
-const BASE_PRICES: Record<string, { price: number; unit: string }> = {
-  "Maize": { price: 8.50, unit: "kg" },
-  "Rice": { price: 12.00, unit: "kg" },
-  "Cassava": { price: 3.50, unit: "kg" },
-  "Yam": { price: 15.00, unit: "tuber" },
-  "Plantain": { price: 5.00, unit: "bunch" },
-  "Tomatoes": { price: 10.00, unit: "kg" },
-  "Onions": { price: 8.00, unit: "kg" },
-  "Peppers": { price: 12.00, unit: "kg" },
-  "Cocoa": { price: 25.00, unit: "kg" },
-  "Palm Oil": { price: 18.00, unit: "liter" }
+// Units are automatically determined from cropUnits.ts, but can be overridden here
+const BASE_PRICES: Record<string, { price: number; unit?: string }> = {
+  "Maize": { price: 8.50 },
+  "Rice": { price: 12.00 },
+  "Cassava": { price: 3.50 },
+  "Yam": { price: 15.00, unit: "tuber" }, // Override to use tuber instead of kg
+  "Plantain": { price: 5.00, unit: "bunch" }, // Override to use bunch
+  "Tomatoes": { price: 10.00 },
+  "Onions": { price: 8.00 },
+  "Peppers": { price: 12.00 },
+  "Cocoa": { price: 25.00 },
+  "Palm Oil": { price: 18.00, unit: "liter" } // Override to use liter
 };
 
 // Regional price variations (percentage adjustment)
@@ -324,6 +326,9 @@ export const fetchAndStoreRealMarketPrices = async (region?: string): Promise<Ma
       // Get base price
       let basePrice = basePriceInfo.price;
       
+      // Get unit for crop (use override if specified, otherwise use primary unit from cropUnits)
+      const unit = basePriceInfo.unit || getPrimaryUnitForCrop(crop);
+      
       // Apply commodity price if available (convert from USD to GH₵)
       const commodity = CROP_TO_COMMODITY[crop];
       if (commodity && commodityPrices[commodity]) {
@@ -380,7 +385,7 @@ export const fetchAndStoreRealMarketPrices = async (region?: string): Promise<Ma
       marketData.push({
         crop,
         price: currentPrice,
-        unit: basePriceInfo.unit,
+        unit: unit,
         change,
         region: regionName
       });

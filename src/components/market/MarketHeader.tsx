@@ -2,16 +2,21 @@
 import React from "react";
 import { useMarket, ghanaRegions } from "@/contexts/MarketContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { MapPin, Clock, Radio } from "lucide-react";
-import LanguageSelector from "@/components/LanguageSelector";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import NotificationsDropdown from "@/components/NotificationsDropdown";
 import { Badge } from "@/components/ui/badge";
 
 const MarketHeader: React.FC = () => {
   const { t } = useLanguage();
   const { region, isLoading, lastUpdated } = useMarket();
+  const { profile } = useAuth();
   
-  // Get the display name for the region (showing "All Regions" if "all" is selected)
-  const displayRegion = region === "all" ? t("allRegions") : region;
+  // Get the display name for the region (showing user's profile region if "all" is selected)
+  const displayRegion = region === "all" 
+    ? (profile?.region || t("allRegions") || "All Regions")
+    : region;
   
   // Calculate time since last update
   const getTimeAgo = (date: Date) => {
@@ -51,7 +56,10 @@ const MarketHeader: React.FC = () => {
               )}
             </div>
           </div>
-          <LanguageSelector />
+          <div className="flex items-center gap-2">
+            <NotificationsDropdown />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </div>

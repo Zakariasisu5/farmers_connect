@@ -7,7 +7,8 @@ import { RefreshCw, Calendar, MapPin } from "lucide-react";
 import WeatherCard from "../components/WeatherCard";
 import MarketPriceCard from "../components/MarketPriceCard";
 import NavigationBar from "../components/NavigationBar";
-import LanguageSelector from "../components/LanguageSelector";
+import { ThemeToggle } from "../components/ThemeToggle";
+import NotificationsDropdown from "../components/NotificationsDropdown";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useWeather } from "@/hooks/useWeather";
@@ -44,7 +45,10 @@ const IndexContent: React.FC = () => {
               </div>
             )}
           </div>
-          <LanguageSelector />
+          <div className="flex items-center gap-2">
+            <NotificationsDropdown />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
 

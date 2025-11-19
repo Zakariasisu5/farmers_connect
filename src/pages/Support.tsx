@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LanguageSelector from "../components/LanguageSelector";
+import { ThemeToggle } from "../components/ThemeToggle";
+import NotificationsDropdown from "../components/NotificationsDropdown";
 import NavigationBar from "../components/NavigationBar";
 import QuestionForm from "../components/QuestionForm";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -52,7 +53,10 @@ const Support: React.FC = () => {
         <div className="bg-background border-b border-border p-4 text-primary shadow-sm">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold">{t("support")}</h1>
-          <LanguageSelector />
+          <div className="flex items-center gap-2">
+            <NotificationsDropdown />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
 
