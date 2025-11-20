@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { RefreshCw, Calendar, MapPin } from "lucide-react";
+import logo from "@/assets/OIP.webp";
 import WeatherCard from "../components/WeatherCard";
 import MarketPriceCard from "../components/MarketPriceCard";
 import NavigationBar from "../components/NavigationBar";
@@ -36,14 +37,17 @@ const IndexContent: React.FC = () => {
       {/* Header (styled to match footer) */}
       <div className="bg-background border-b border-border p-4 text-primary shadow-sm">
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-xl font-bold">Farmer Focus Connect</h1>
-            {profile && (
-              <div className="flex items-center text-sm mt-1 gap-1 text-muted-foreground">
-                <MapPin size={14} />
-                <span>{displayRegion}</span>
-              </div>
-            )}
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="Farmer Focus Connect" className="h-8 w-auto rounded-sm" />
+            <div>
+              <h1 className="text-xl font-bold">Farmer Focus Connect</h1>
+              {profile && (
+                <div className="flex items-center text-sm mt-1 gap-1 text-muted-foreground">
+                  <MapPin size={14} />
+                  <span>{displayRegion}</span>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <NotificationsDropdown />

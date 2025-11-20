@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Star, Upload, Send, Sparkles } from "lucide-react";
+import logo from "@/assets/logo.webp";
 import { useToast } from "@/hooks/use-toast";
 
 export interface Testimonial {
@@ -200,7 +201,7 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2"
           >
-            <Sparkles className="h-6 w-6 text-primary" />
+            <img src={logo} alt="Farmer Focus Connect" className="h-8 w-auto rounded-sm" />
             <span className="text-xl font-bold">Farmer Focus Connect</span>
           </motion.div>
           <motion.div
@@ -458,7 +459,7 @@ export const LandingPage: React.FC = () => {
       {/* Footer */}
       <footer className="border-t bg-background py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2024 Farmer Focus Connect. All rights reserved.</p>
+          <p>© 2025 Farmer Focus Connect. All rights reserved.</p>
         </div>
       </footer>
     </div>
